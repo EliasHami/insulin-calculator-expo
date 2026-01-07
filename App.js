@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ConvexProvider, useConvex, useMutation } from 'convex/react';
+import { ConvexProvider, useMutation } from 'convex/react';
 import { ConvexReactClient } from 'convex/react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from './convex/_generated/api';
@@ -50,6 +50,7 @@ function Calculator() {
   const [lastInjectionHours, setLastInjectionHours] = useState('');
   const [lastInjectionUnits, setLastInjectionUnits] = useState('');
   const [result, setResult] = useState(null);
+  const [saveError, setSaveError] = useState(null);
 
   const saveCalculation = useMutation(api.calculations.save);
 
@@ -65,28 +66,37 @@ function Calculator() {
         await AsyncStorage.setItem('clientId', id);
       }
       setClientId(id);
-    } catch (error) {
-      console.error('Error loading client ID:', error);
+    } catch {
       setClientId(generateClientId());
     }
   };
 
   const calculateBolus = async () => {
-    const carbsNum = parseFloat(carbs) || 0;
-    const mealCoefNum = parseFloat(mealCoefficient) || 0;
-    const currentGlucoseNum = parseFloat(currentGlucose) || 0;
-    const targetGlucoseNum = parseFloat(targetGlucose) || 0;
-    const sensitivityNum = parseFloat(insulinSensitivity) || 1;
-    const lastHours = parseFloat(lastInjectionHours) || 0;
-    const lastUnits = parseFloat(lastInjectionUnits) || 0;
+    setSaveError(null);
+
+    const carbsNum = Math.max(0, parseFloat(carbs) || 0);
+    const mealCoefNum = Math.max(0, parseFloat(mealCoefficient) || 0);
+    const currentGlucoseNum = Math.max(0, parseFloat(currentGlucose) || 0);
+    const targetGlucoseNum = Math.max(0, parseFloat(targetGlucose) || 0);
+    const sensitivityNum = parseFloat(insulinSensitivity);
+    const lastHours = Math.max(0, parseFloat(lastInjectionHours) || 0);
+    const lastUnits = Math.max(0, parseFloat(lastInjectionUnits) || 0);
+
+    // Validation: sensitivity must be a positive number
+    if (!sensitivityNum || sensitivityNum <= 0) {
+      setSaveError('La sensibilité à l\'insuline doit être un nombre positif');
+      return;
+    }
 
     // Meal bolus: (carbs / 10) * meal coefficient
     const mealBolus = (carbsNum / 10) * mealCoefNum;
 
     // Correction bolus: (current glucose - target glucose) / insulin sensitivity
+    // Glucose is in mg/dL, sensitivity is in g/L/UI (1 g/L = 100 mg/dL)
     let correctionBolus = 0;
     if (currentGlucoseNum > targetGlucoseNum && sensitivityNum > 0) {
-      correctionBolus = (currentGlucoseNum - targetGlucoseNum) / sensitivityNum;
+      const glucoseDiffInGL = (currentGlucoseNum - targetGlucoseNum) / 100;
+      correctionBolus = glucoseDiffInGL / sensitivityNum;
     }
 
     // Adjust for insulin on board (IOB) - simple linear decay over 4 hours
@@ -124,7 +134,7 @@ function Calculator() {
           totalBolus: calculationResult.totalBolus,
         });
       } catch (error) {
-        console.error('Error saving calculation:', error);
+        setSaveError('Erreur lors de la sauvegarde');
       }
     }
   };
@@ -190,7 +200,7 @@ function Calculator() {
             value={insulinSensitivity}
             onChangeText={setInsulinSensitivity}
             placeholder="0"
-            unit="mg/dL/UI"
+            unit="g/L/UI"
           />
         </View>
 
@@ -219,6 +229,12 @@ function Calculator() {
         >
           <Text style={styles.buttonText}>Calculer</Text>
         </TouchableOpacity>
+
+        {saveError && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{saveError}</Text>
+          </View>
+        )}
 
         {result && (
           <View style={styles.resultContainer}>
@@ -381,5 +397,18 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#2e7d32',
+  },
+  errorContainer: {
+    backgroundColor: '#ffebee',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#f44336',
+  },
+  errorText: {
+    color: '#c62828',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
