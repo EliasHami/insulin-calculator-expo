@@ -18,4 +18,17 @@ export default defineSchema({
     correctionBolus: v.number(),
     totalBolus: v.number(),
   }).index("by_client", ["clientId"]),
+
+  settings: defineTable({
+    clientId: v.string(),
+    targetGlucose: v.string(),
+    insulinSensitivity: v.string(),
+    mealCoefficients: v.object({
+      breakfast: v.string(),
+      lunch: v.string(),
+      dinner: v.string(),
+      snack: v.string(),
+    }),
+    updatedAt: v.number(),
+  }).index("by_client", ["clientId"]),
 });
