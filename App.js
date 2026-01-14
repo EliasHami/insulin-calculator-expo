@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ConvexProvider } from 'convex/react';
 import { ConvexReactClient } from 'convex/react';
+import { MaterialIcons } from '@expo/vector-icons';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import CalculatorScreen from './screens/CalculatorScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -17,13 +18,13 @@ const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL);
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function TabIcon({ name, focused }) {
-  const icons = {
-    calculator: focused ? '🧮' : '🔢',
-    features: focused ? '✨' : '⭐',
-    settings: focused ? '⚙️' : '🔧',
+function TabIcon({ name, color }) {
+  const iconMap = {
+    calculator: 'calculate',
+    features: 'star',
+    settings: 'settings',
   };
-  return <Text style={{ fontSize: 24 }}>{icons[name]}</Text>;
+  return <MaterialIcons name={iconMap[name]} size={24} color={color} />;
 }
 
 function LoadingScreen() {
@@ -50,7 +51,7 @@ function MainTabs() {
         name="Calculateur"
         component={CalculatorScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon name="calculator" focused={focused} />,
+          tabBarIcon: ({ color }) => <TabIcon name="calculator" color={color} />,
           headerShown: false,
         }}
       />
@@ -58,7 +59,7 @@ function MainTabs() {
         name="Fonctionnalités"
         component={FeaturesScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon name="features" focused={focused} />,
+          tabBarIcon: ({ color }) => <TabIcon name="features" color={color} />,
           headerShown: false,
         }}
       />
@@ -66,7 +67,7 @@ function MainTabs() {
         name="Paramètres"
         component={SettingsScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon name="settings" focused={focused} />,
+          tabBarIcon: ({ color }) => <TabIcon name="settings" color={color} />,
           headerShown: false,
         }}
       />
