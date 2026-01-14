@@ -9,6 +9,7 @@ import { ConvexReactClient } from 'convex/react';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import CalculatorScreen from './screens/CalculatorScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import FeaturesScreen from './screens/FeaturesScreen';
 import OnboardingScreen from './screens/onboarding/OnboardingScreen';
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL);
@@ -19,6 +20,7 @@ const Stack = createStackNavigator();
 function TabIcon({ name, focused }) {
   const icons = {
     calculator: focused ? '🧮' : '🔢',
+    features: focused ? '✨' : '⭐',
     settings: focused ? '⚙️' : '🔧',
   };
   return <Text style={{ fontSize: 24 }}>{icons[name]}</Text>;
@@ -49,6 +51,14 @@ function MainTabs() {
         component={CalculatorScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabIcon name="calculator" focused={focused} />,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Fonctionnalités"
+        component={FeaturesScreen}
+        options={{
+          tabBarIcon: ({ focused }) => <TabIcon name="features" focused={focused} />,
           headerShown: false,
         }}
       />
