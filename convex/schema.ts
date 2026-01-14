@@ -31,4 +31,11 @@ export default defineSchema({
     }),
     updatedAt: v.number(),
   }).index("by_client", ["clientId"]),
+
+  featureEmails: defineTable({
+    email: v.string(),
+    clientId: v.string(),
+    timestamp: v.number(),
+  }).index("by_email", ["email"])
+    .index("by_client", ["clientId"]),
 });
