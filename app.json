@@ -7,6 +7,18 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "owner": "eliashami",
+    "updates": {
+      "url": "https://u.expo.dev/b0a7a631-f3a5-4cbc-b9b8-1f353f04f38e"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b0a7a631-f3a5-4cbc-b9b8-1f353f04f38e"
+      }
+    },
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
