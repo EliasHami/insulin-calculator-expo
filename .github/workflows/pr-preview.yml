@@ -50,6 +50,12 @@ jobs:
       - name: Generate Convex files
         run: npx convex dev --once
 
+      - name: Setup environment for Expo
+        run: |
+          cat > .env << EOF
+          EXPO_PUBLIC_CONVEX_URL=${{ secrets.CONVEX_SELF_HOSTED_URL }}
+          EOF
+
       - name: Create update
         id: eas_update
         run: |

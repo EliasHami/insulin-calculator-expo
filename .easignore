@@ -1,0 +1,12 @@
+# EAS Update ignore file
+# This overrides .gitignore for EAS builds and updates
+# We need to include convex/_generated files even though they're in .gitignore
+
+# Standard ignores
+node_modules/
+.expo/
+.expo-shared/
+*.log
+
+# Keep convex/_generated files (don't ignore them like .gitignore does)
+# This is critical for the app to work with Convex
