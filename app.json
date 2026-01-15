@@ -9,14 +9,14 @@
     "newArchEnabled": true,
     "owner": "eliashami",
     "updates": {
-      "url": "https://u.expo.dev/update/[your-project-id]"
+      "url": "https://u.expo.dev/b0a7a631-f3a5-4cbc-b9b8-1f353f04f38e"
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "extra": {
       "eas": {
-        "projectId": "[your-project-id]"
+        "projectId": "b0a7a631-f3a5-4cbc-b9b8-1f353f04f38e"
       }
     },
     "splash": {
