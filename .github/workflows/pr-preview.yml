@@ -72,7 +72,7 @@ jobs:
             PROJECT_ID="your-project-id"
           fi
 
-          QR_URL="exp://u.expo.dev/update/${PROJECT_ID}?channel-name=${CHANNEL_NAME}"
+          QR_URL="exp://u.expo.dev/${PROJECT_ID}?channel-name=${CHANNEL_NAME}"
           echo "qr_url=$QR_URL" >> $GITHUB_OUTPUT
           echo "channel=$CHANNEL_NAME" >> $GITHUB_OUTPUT
 
