@@ -40,9 +40,10 @@ jobs:
         run: npm ci
 
       - name: Generate Convex files
-        run: npx convex dev --once --codegen-only
+        run: npx convex dev --once
         env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          CONVEX_SELF_HOSTED_URL: ${{ secrets.CONVEX_SELF_HOSTED_URL }}
+          CONVEX_SELF_HOSTED_ADMIN_KEY: ${{ secrets.CONVEX_SELF_HOSTED_ADMIN_KEY }}
 
       - name: Create update
         id: eas_update
