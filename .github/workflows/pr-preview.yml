@@ -39,11 +39,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Convex credentials
+        run: |
+          cat > .env.local << EOF
+          CONVEX_SELF_HOSTED_URL=${{ secrets.CONVEX_SELF_HOSTED_URL }}
+          CONVEX_SELF_HOSTED_ADMIN_KEY=${{ secrets.CONVEX_SELF_HOSTED_ADMIN_KEY }}
+          EXPO_PUBLIC_CONVEX_URL=${{ secrets.CONVEX_SELF_HOSTED_URL }}
+          EOF
+
       - name: Generate Convex files
         run: npx convex dev --once
-        env:
-          CONVEX_SELF_HOSTED_URL: ${{ secrets.CONVEX_SELF_HOSTED_URL }}
-          CONVEX_SELF_HOSTED_ADMIN_KEY: ${{ secrets.CONVEX_SELF_HOSTED_ADMIN_KEY }}
 
       - name: Create update
         id: eas_update
